@@ -3,8 +3,6 @@
 $template_css_file = 'templates/default/css/general.css';
 $template_css_file = '/'. $template_css_file . '?v=' . filemtime($_SERVER["DOCUMENT_ROOT"] . $template_css_file);
 
-$page_content['twitter_feed'] = '<aside id="twitter_feed" class="width_control"><a class="twitter-timeline" data-lang="en" data-tweet-limit="3" href="https://twitter.com/JacobSeated?ref_src=twsrc%5Etfw">Tweets by JacobSeated</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></aside>';
-
 $template = <<<LOADTEMPLATE
 <!doctype html>
 <html>
@@ -20,7 +18,7 @@ $template = <<<LOADTEMPLATE
 <body>
     <header id="site_header">
       <nav>
-       <ol class="width_control"> <li>Projects</li> <li>Contact</li> </ol>
+       <ol class="width_control"> <li></li> <li>Contact</li> </ol>
       </nav>
     </header>
     <article id="main_content">
