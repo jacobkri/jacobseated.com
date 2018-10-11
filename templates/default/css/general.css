@@ -1,6 +1,7 @@
-* {margin: 0;padding: 0;}
+* {margin:0;padding:0;}
 html {height:100%;}
-body {max-width:1900px;margin:0 auto;letter-spacing: 0.05em;background:rgb(245, 245, 245);font-size: 16px;overflow-x: hidden;min-height: 100%;color: rgb(70, 70, 70);position: relative;overflow-y: scroll;}
+body {max-width:1920px;margin:0 auto;letter-spacing: 0.05em;background:rgb(245, 245, 245);font-size: 16px;min-height: 100%;color: rgb(70, 70, 70);
+position: relative;overflow-y: scroll;}
 @font-face {
   font-family: "Open Sans";
   src: url("/fonts/OpenSans-Regular.woff2") format("woff2"),
@@ -14,6 +15,7 @@ body {max-width:1900px;margin:0 auto;letter-spacing: 0.05em;background:rgb(245, 
 
 /* TEXT */
 article p {font-size: 1.4em;margin: 0 0 1em;font-family: "Open Sans", sans-serif;}
+#splash + p {text-align:justify;}
 #main_content h1 {font-size: 2.9em;font-family: 'Roboto', sans-serif;}
 h2,h3 {font-size: 1.9em;font-family: 'Roboto', sans-serif;}
 a:link {text-decoration: none;color: rgb(100, 100, 245);}
@@ -23,14 +25,14 @@ a:hover {color: rgb(245, 100, 100);}
 
 /* General->Layout */
 .intro_text {text-align:center;}
-.width_control {max-width:1400px;position:relative;margin:0 auto;width:50%;min-width:400px;}
+.width_control {max-width:1400px;position:relative;margin:0 auto;width:60%;min-width:400px;}
 section section {padding:1em;}
 #main_content .radial_stripes {position:absolute;top:-22vw;left:10%;width:40vw;height:40vw;animation:rotate 30s infinite linear;}
 .content_wrap {padding:1em;margin:0 auto;}
 .content_wrap + .content_wrap {text-align:left;}
-#main_content {text-align:left;position:relative;margin:0 auto;padding:2.5em 0 4em;background: rgb(155, 100, 255);background:rgb(245, 245, 245);}
+#main_content {text-align:left;position:relative;margin:0 auto;padding:0 0 4em;background: rgb(155, 100, 255);background:rgb(245, 245, 245);}
 .article_img {float:right;width:35%;min-width:200px;margin:0 1em 1em;border-top-left-radius:20%;}
-#main_content header {padding:1em 0;position:relative;top:0;width:100%;overflow:hidden;text-align:center;padding:0.5em;
+#main_content header {padding:1em 0;position:relative;top:0;width:100%;overflow:hidden;text-align:center;
 height:5em;}
 #profile_img_box {border:1px solid rgb(200, 200, 200);border-radius:50%;width:300px;height:300px;padding:0.5em;margin:0 auto 0;}
 #profile_img {
@@ -38,16 +40,26 @@ border:0.5em solid rgb(225, 225, 225);border-radius:50%;
 width:300px;height:300px;overflow:hidden;background:url("/i/profile1.jpg") no-repeat top left;
 position:relative;top:-0.5em;left:-0.5em;
 }
-
+#splash {color:#fff;width:100%;border-bottom-left-radius:50%;border-bottom-right-radius:50%;padding:2.5em 0 2em;
+background:url("/i/parking-the-sun-full.jpg") no-repeat fixed top;
+background-size: cover;text-shadow: 1px 1px 2px #000;
+margin:0;
+}
 /* Intro Links */
-.il {font-size:2em;list-style-type:none;width:100%;border-bottom:3em solid rgb(225, 225, 225);border-top:3em solid rgb(225, 225, 225);border-radius:50%;overflow:hidden;}
-.il a {display:block;line-height:2em;font-weight:bold;letter-spacing:0.1em;transition: color 0.5s, text-shadow 0.5s ease-in-out;}
+.il {font-size:2em;list-style-type:none;width:100%;
+border-bottom:3em solid rgb(225, 225, 225);border-top:3em solid rgb(225, 225, 225);border-radius:50%;
+border-left:0.5em solid rgb(225, 225, 225);border-right:0.5em solid rgb(225, 225, 225);
+margin: 0 auto;overflow:hidden;box-sizing:border-box;
+}
+.il a {white-space:nowrap;text-align:center;margin:0;padding:0;display:block;line-height:2em;font-weight:bold;letter-spacing:0.1em;transition: color 0.5s, text-shadow 0.5s ease-in-out;}
 .il a:hover {background:rgba(225, 225, 225, 0.5);text-shadow:0px 0px 1px #000;}
 .il img {max-width: 5vw;filter:grayscale(100%);}
 .il img:hover {filter:grayscale(0);}
-.il .even {text-align:right;padding-right:50%;animation:right_slide_in 1s linear;}
-.il .odd {text-align:left;padding-left:50%;animation:left_slide_in 1s linear;}
+.il .even {}
+.il .odd {}
 
+.right_slide_in {animation:right_slide_in 1s linear;}
+.left_slide_in {animation:left_slide_in 1s linear;}
 /* Consent to use of Personal data and Cookies */
 #data_consent {
   padding:1em;
@@ -72,7 +84,7 @@ button {box-shadow:none;font-size:inherit;}
 .button:active {color:#fff;}
 .button:focus {outline:1px solid rgb(60, 60, 210);}
 
-#site_header {position:fixed;top:0;left:0;right:0;height:2.5em;width:100%;z-index:2;}
+#site_header {position:fixed;top:0;left:0;right:0;height:2.5em;width:100%;z-index:2;border-bottom:1px solid rgba(50,50,90,0.3)}
 nav {height:2.5em;background: rgba(155,155,255, 0.7);text-transform:uppercase;font-weight:bold;color:#fff;}
 nav ol {list-style-type:none;}
 nav li {float:left;width:fit-content;font-size:1.2em;padding:0.5em 0.5em 0;}
@@ -96,11 +108,11 @@ nav li {float:left;width:fit-content;font-size:1.2em;padding:0.5em 0.5em 0;}
   -webkit-animation-delay:2s;}
 @keyframes left_slide_in {
   from {padding-left:80%;opacity:0;}
-  to {padding-left:50%;opacity:1;}
+  to {padding-left:0%;opacity:1;}
 }
 @keyframes right_slide_in {
-  from {padding-right:80%;opacity:0;}
-  to {padding-right:50%;opacity:1;}
+  from {padding-right:100%;opacity:0;}
+  to {padding-right:0%;opacity:1;}
 }
 @keyframes slide_up {
   from {margin-top:100vw;opacity:0;}
@@ -126,7 +138,9 @@ nav li {float:left;width:fit-content;font-size:1.2em;padding:0.5em 0.5em 0;}
   .il {position:initial;}
 }
 
-
+@media screen and (max-width: 1600px) {
+  #splash {height:100vh;}
+}
 
 
 /* Images for reuse */
