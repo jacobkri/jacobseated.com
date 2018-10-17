@@ -34,17 +34,7 @@ section section {padding:1em;}
 .article_img {float:right;width:35%;min-width:200px;margin:0 1em 1em;border-top-left-radius:20%;}
 #main_content header {padding:1em 0;position:relative;top:0;width:100%;overflow:hidden;text-align:center;
 height:5em;}
-#profile_img_box {border:1px solid rgb(200, 200, 200);border-radius:50%;width:300px;height:300px;padding:0.5em;margin:0 auto 0;}
-#profile_img {
-border:0.5em solid rgb(225, 225, 225);border-radius:50%;
-width:300px;height:300px;overflow:hidden;background:url("/i/profile1.jpg") no-repeat top left;
-position:relative;top:-0.5em;left:-0.5em;
-}
-#splash {color:#fff;width:100%;border-bottom-left-radius:50%;border-bottom-right-radius:50%;padding:2.5em 0 2em;
-background:url("/i/parking-the-sun-full.jpg") no-repeat fixed top;
-background-size: cover;text-shadow: 1px 1px 2px #000;
-margin:0;
-}
+
 /* Intro Links */
 .il {font-size:2em;list-style-type:none;width:100%;
 border-bottom:3em solid rgb(225, 225, 225);border-top:3em solid rgb(225, 225, 225);border-radius:50%;
@@ -55,11 +45,11 @@ margin: 0 auto;overflow:hidden;box-sizing:border-box;
 .il a:hover {background:rgba(225, 225, 225, 0.5);text-shadow:0px 0px 1px #000;}
 .il img {max-width: 5vw;filter:grayscale(100%);}
 .il img:hover {filter:grayscale(0);}
-.il .even {}
-.il .odd {}
+.il .even {animation:right_slide_in 1s linear;}
+.il .odd {animation:left_slide_in 1s linear;}
 
-.right_slide_in {animation:right_slide_in 1s linear;}
-.left_slide_in {animation:left_slide_in 1s linear;}
+.right_slide_in {animation:right_slide_in 1s linear;} /* May or may not be used by scripts */
+.left_slide_in {animation:left_slide_in 1s linear;} /* May or may not be used by scripts */
 /* Consent to use of Personal data and Cookies */
 #data_consent {
   padding:1em;
@@ -137,12 +127,6 @@ nav li {float:left;width:fit-content;font-size:1.2em;padding:0.5em 0.5em 0;}
   .article_img {float:none;width:100%;}
   .il {position:initial;}
 }
-
-@media screen and (max-width: 1600px) {
-  #splash {height:100vh;}
-}
-
-
 /* Images for reuse */
 .radial_stripes {background: url('data:image/svg+xml;utf8,<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1003.97 1009.5"><defs><style>.cls-1{fill-rule:evenodd;fill:url(%23radial-gradient);}</style><radialGradient id="radial-gradient" cx="615.23" cy="557.75" r="503.37" gradientUnits="userSpaceOnUse"><stop offset="0" stop-opacity="0.5"/><stop offset="1" stop-color="%23333" stop-opacity="0"/></radialGradient></defs><title>radial-stripes</title><path class="cls-1" d="M615.23,53V557.75L510.29,64ZM318.54,149.4,615.23,557.75,409.93,96.64Zm-140.44,156L615.23,557.75,240.13,220ZM113.24,505l502,52.76-480-156Zm21.94,208.74,480.05-156-502,52.76Zm105,181.76,375.1-337.74L178.1,810.13Zm169.8,123.37,205.3-461.11L318.54,966.1Zm205.3,43.64V557.75L510.29,1051.47Zm205.3-43.64L615.23,557.75l104.94,493.72Zm169.8-123.37L615.23,557.75,911.91,966.1Zm104.94-181.76-480-156,437.13,252.38ZM1117.21,505l-502,52.76,502,52.76Zm-64.85-199.62L615.23,557.75l480-156Zm-140.45-156L615.23,557.75,990.33,220ZM720.17,64,615.23,557.75,820.53,96.64Z" transform="translate(-113.24 -53)"/></svg>');}
 
