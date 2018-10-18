@@ -6,8 +6,8 @@ $main = new TheSeat();
 
 $main->gdpr_consent(); // Include consent dialog if user did not consent to cookies
 
-
-$main->template = $main->load_template(); // Populate the $template with the $page_content data
+$template_file = $_SERVER["DOCUMENT_ROOT"] . 'templates/default/general.php';
+$main->template = $main->load_template($template_file); // Populate the $template with the $page_content data
 $main->etag_header = md5($main->template); // Create etag based on populated template
 
 // Send output to client
@@ -28,7 +28,6 @@ class TheSeat {
   private $response_headers = array();
   
   // File paths
-  private $template_file;
   private $json_dir;
   
   // Caching Headers
@@ -108,15 +107,26 @@ class TheSeat {
     } else {
       $json_file_data = file_get_contents($json_file);
     }  
-    $this->page_content = $this->page_content + json_decode($json_file_data, true);
-    $this->last_modified = $this->page_content['last_modified']; // Last Modified timestamp from the .json data
-    // header("Content-Type: text/plain");
-    // var_dump($this->page_content);exit();
+    $this->page_content             = $this->page_content + json_decode($json_file_data, true);
+    $this->last_modified            = $this->page_content['last_modified']; // Last Modified timestamp from the .json data
+    $this->page_content['site_nav'] = $this->build_navigation();
   }
-  public function load_template() {
-    $page_content = $this->page_content;
-    $this->template_file = $_SERVER["DOCUMENT_ROOT"] . 'templates/default/general.php';
-    require $this->template_file; // Include the template used when responding to an HTTP request
+  private function build_navigation() {
+      $files = array_slice(scandir($this->json_dir), 2); // Remove ".." and "." with array_slice()
+      
+      $html_list = '';
+      foreach ($files as &$file) {
+        if(preg_match('/^([A-Za-z0-9_-]{1,255})\.json$/',  $file, $fparts)) {
+          if($fparts[1] !==  'frontpage') {
+            $html_list .= '<li><a href="/?page='.$fparts[1].'">' . $fparts[1] . '</a></li>';
+          }
+        }
+      }
+      return '<ol class="width_control">' . $html_list . '</ol>';
+  }
+  public function load_template($template_file) {
+    $page_content = $this->page_content; // $page_content used to populate $template with data
+    require $template_file; // Include the template used when responding to an HTTP request
     return $template;
   }
 

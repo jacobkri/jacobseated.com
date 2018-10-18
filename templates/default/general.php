@@ -28,7 +28,7 @@ $template = <<<LOADTEMPLATE
 <body>
     <header id="site_header">
       <nav>
-       <ol class="width_control"> <li></li> <li>Skills</li> <li>Projects</li></ol>
+       {$this->page_content['site_nav']}
       </nav>
     </header>
     <article id="main_content">
