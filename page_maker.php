@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       // OPTIONAL FIELDS
       if(!empty($_POST['description'])) {
-        if (!preg_match('/^[A-Za-z0-9_\., -]{1,255}$/', $_POST['description'])) {
+        if (!preg_match('/^[A-Za-z0-9_\., -!]{1,255}$/', $_POST['description'])) {
           echo '<h1>Invalid description</h1><p>The field can contain a maximum of <b>255</b> characters.</p>';
           exit();
         }
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 ?><!doctype html>
-<html>
+<html lang="en">
 
   <head>
    <title>Page Maker</title>
@@ -98,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php echo $message; ?>
     <form action="page_maker.php" method="post">
       <label for="title">Title:</label>
-      <input type="text" name="title" id="title" placeholder="Title" autocomplete="off">
+      <input type="text" name="title" id="title" placeholder="Title">
       
       <label for="description">Description (Optional):</label>
-      <input type="text" name="description" id="description" placeholder="Description" autocomplete="off">
+      <input type="text" name="description" id="description" placeholder="Description">
       
       <label for="template">Template css file <b>I.e:</b> <i>yourpage.css</i> <b>||</b> <i>general.css</i> (Optional):</label>
       <input type="text" name="custom_css" id="custom_css" placeholder="frontpage.css">

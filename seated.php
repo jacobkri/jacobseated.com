@@ -26,15 +26,17 @@ class TheSeat {
     
   private $page_content = array();
   private $response_headers = array();
-  
+
   // File paths
   private $json_dir;
   
   // Caching Headers
   private $last_modified;
+
   public $etag_header = false;
   
   public $template;
+  public $requested_page;
   
   public function __construct() {
     $this->json_dir = $_SERVER["DOCUMENT_ROOT"] . 'json/';
@@ -90,16 +92,16 @@ class TheSeat {
         echo 'What are you trying to accomplish? (Rhetorical question)';
         exit();
       } else {
-        $requested_page = $_GET['page'];
+        $this->requested_page = $_GET['page'];
       }
       $frontpage_access = $r = ($_GET['page'] == 'frontpage') ? true : false;
     } else {
-      $requested_page = 'frontpage';
+      $this->requested_page = 'frontpage';
       $frontpage_access = false;
     }
     
     // Check if requested page exists, and load page content
-    $json_file = $this->json_dir . $requested_page .'.json';
+    $json_file = $this->json_dir . $this->requested_page .'.json';
     if ((!file_exists($json_file)) || ($frontpage_access === true)) {
       // Since "frontpage" is the default (Accessible from "/", do not allow access to this file.
       header($this->protocol. ' 404: Not Found');
@@ -114,15 +116,19 @@ class TheSeat {
   private function build_navigation() {
       $files = array_slice(scandir($this->json_dir), 2); // Remove ".." and "." with array_slice()
       
-      $html_list = '';
+      if ($this->requested_page !== 'frontpage') {
+        $html_list = '<li><a href="/">Home '.$fparts[1].'</a></li>';
+      } else {
+        $html_list = '';
+      }
       foreach ($files as &$file) {
         if(preg_match('/^([A-Za-z0-9_-]{1,255})\.json$/',  $file, $fparts)) {
-          if($fparts[1] !==  'frontpage') {
+          if(($fparts[1] !==  'frontpage') && ($fparts[1] !== $this->requested_page)) {
             $html_list .= '<li><a href="/?page='.$fparts[1].'">' . $fparts[1] . '</a></li>';
           }
         }
       }
-      return '<ol class="width_control">' . $html_list . '</ol>';
+      return '<button id="burgerButton">☰</button><ol class="width_control">' . $html_list . '</ol>';
   }
   public function load_template($template_file) {
     $page_content = $this->page_content; // $page_content used to populate $template with data

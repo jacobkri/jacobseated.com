@@ -13,7 +13,7 @@ $general_css_file = '/'. $general_css_file . '?v=' . filemtime($_SERVER["DOCUMEN
 // matric sys
 $template = <<<LOADTEMPLATE
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
     <title>☕ JacobSeated.com</title>
@@ -27,7 +27,7 @@ $template = <<<LOADTEMPLATE
 
 <body>
     <header id="site_header">
-      <nav>
+      <nav id="navigation">
        {$this->page_content['site_nav']}
       </nav>
     </header>
@@ -35,10 +35,39 @@ $template = <<<LOADTEMPLATE
 {$page_content['text_html']}
     </article>
 
-<footer id="site_footer">
--
-</footer>
+    <footer id="site_footer">
+    </footer>
 
+    <script>
+    "use strict";
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        let burgerState = false;
+        let burgerButton = document.querySelector("#burgerButton");
+        let navigation = document.querySelector("#navigation");
+
+        let article = document.querySelector("article");
+
+        burgerButton.addEventListener("click", toggleBurger);
+
+        function toggleBurger() {
+            if (burgerState === false) {
+                navigation.className = "burgerOpen";
+                burgerState = true;
+
+                article.className = "blur_element";
+
+                burgerButton.innerHTML = '☕';
+            } else {
+                navigation.className = "burgerClosed";
+                burgerState = false;
+
+                article.className = "deblur_element";
+                burgerButton.innerHTML = '☰';
+            }
+        }
+    });
+    </script>
 </body>
 
 </html>
