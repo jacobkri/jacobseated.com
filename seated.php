@@ -94,7 +94,7 @@ class TheSeat {
       } else {
         $this->requested_page = $_GET['page'];
       }
-      $frontpage_access = $r = ($_GET['page'] == 'frontpage') ? true : false;
+      $frontpage_access = ($_GET['page'] == 'frontpage') ? true : false;
     } else {
       $this->requested_page = 'frontpage';
       $frontpage_access = false;

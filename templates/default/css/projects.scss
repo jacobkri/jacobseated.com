@@ -2,7 +2,7 @@
 $projects_gray:rgba(225, 225, 225, 0.5);
 
 
-body{overflow-x:hidden;height:2000px;}
+body{overflow-x:hidden;}
 #personal_projects {text-align: center;width:110%;transform:rotate(-3deg);
 border-top:4em solid $projects_gray;
 border-bottom:4em solid $projects_gray;
@@ -45,7 +45,7 @@ overflow:hidden;margin:0 auto;
 .left_slide_in {animation:left_slide_in 1s linear;} /* May or may not be used by scripts */
 
 /* Decoration */
-#crane {background: url("/i/crane-full.jpg") no-repeat bottom;width:400px;height:1252px;
+#crane {background: url("/i/crane-m.jpg") no-repeat bottom;width:400px;height:1252px;
   background-size:cover;position:absolute;top:0;right:50px;z-index:0;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 10vw;
@@ -71,7 +71,7 @@ overflow:hidden;margin:0 auto;
   .projects_content_wrap { /* This needs to be activated earlier than .projects_content_wrap */
     padding:6em 1em 1em 1em;
   }
-  .content_push1252 {position:absolute;top:1252px;}
+  .content_push1252 {}
 }
 @media screen and (max-width: 900px) {
   header h1 {position:relative;left:12%;}

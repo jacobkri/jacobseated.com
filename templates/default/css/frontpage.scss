@@ -3,10 +3,10 @@
 #profile_img {
 border:0.5em solid rgb(225, 225, 225);border-radius:50%;
 width:300px;height:300px;overflow:hidden;background:url("/i/profile1.jpg") no-repeat top left;
-position:relative;top:-0.5em;left:-0.5em;
+position:relative;top:-0.5em;left:-0.5em;-webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 #splash {color:#fff;width:100%;border-bottom-left-radius:50%;border-bottom-right-radius:50%;padding:2.5em 0 2em;
-background:url("/i/parking-the-sun-full.jpg") no-repeat fixed top;
+background:url("/i/parking-the-sun-m.jpg") no-repeat fixed top;
 background-size: cover;text-shadow: 1px 1px 2px #000;
 margin:0;
 }
