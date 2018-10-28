@@ -1,8 +1,7 @@
 /* SASS Variables for Repetitive Project Page colors */
 $projects_gray:rgba(225, 225, 225, 0.5);
 
-
-body{overflow-x:hidden;}
+#main_content {overflow-x:hidden;}
 #personal_projects {text-align: center;width:110%;transform:rotate(-3deg);
 border-top:4em solid $projects_gray;
 border-bottom:4em solid $projects_gray;
@@ -13,13 +12,13 @@ z-index:1;
 
 /* Content */
 .top_content_wrap, .projects_content_wrap {
-  padding:6em 550px 1em 1em;position:relative;z-index:2;text-align:justify;
+  padding:6em 560px 1em 1em;position:relative;z-index:2;text-align:justify;
 }
 
-.projects_content_inner_wrap h2 {text-align:right;background:$projects_gray;padding:0.5em;width:140%;position:relative;left:-40%;}
+.projects_content_inner_wrap h2 {text-align:right;background:$projects_gray;padding:0.5em;width:140%;position:relative;left:-40%;box-sizing: border-box;}
 
 /* "Highlighted Projects" */
-header h1 {z-index:2;background:none;width:400px;position:absolute;right:50px;top:1.5em;color:rgb(15,10,10);}
+header h1 {z-index:2;background:none;width:400px;position:absolute;right:50px;top:2.2em;color:rgb(15,10,10);}
 header h1 span {display:block;background:rgba(255,255,0,0.9);margin:0 0 0.5em;padding:0.2em;transform:rotate(2deg);}
 header h1 span + span {position:relative;left:-2em;transform:rotate(2deg);}
 
@@ -50,7 +49,6 @@ overflow:hidden;margin:0 auto;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 10vw;
   }
-
 /* Animations */
 @keyframes left_slide_in {
   from {padding-left:80%;opacity:0;}
@@ -63,15 +61,23 @@ overflow:hidden;margin:0 auto;
 
 /* For devices with tiny screen sizes */
 @media screen and (max-width: 1224px) {
+  article header h1 {margin:0 auto;}
   #crane {right:-10%;width:120%;}
   il {margin:0 auto;}
   .top_content_wrap p {padding:0.5em;text-shadow: 1px 1px 2px #000;color:#fff;
     border-radius:1em;}
-
   .projects_content_wrap { /* This needs to be activated earlier than .projects_content_wrap */
-    padding:6em 1em 1em 1em;
+    padding:6em 0 1em 0;
   }
-  .content_push1252 {}
+  .projects_content_wrap p {
+    padding:0 1em;
+  }
+  #personal_projects + .projects_content_wrap {
+    margin:500px 0 0 0;
+  }
+  .projects_content_wrap .projects_content_inner_wrap {
+    background:rgb(245, 245, 245);
+  }
 }
 @media screen and (max-width: 900px) {
   header h1 {position:relative;left:12%;}
@@ -81,7 +87,6 @@ overflow:hidden;margin:0 auto;
   il {margin:0 auto;}
   .il .even,
   .il .odd {text-align:center;padding:0;animation:none;}
-  #crane {right:0;width:100%;}
 }
 @media screen and (max-width: 550px) {
   .il {width:100%;}
