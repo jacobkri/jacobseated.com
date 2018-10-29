@@ -21,7 +21,7 @@ article p {font-size: 1.4em;margin: 0 0 1em;font-family: "Open Sans", sans-serif
 h2,h3 {font-size: 1.9em;font-family: $heading-font;}
 
 /* General->Layout */
-.width_control {position:relative;margin:0 auto;width:60%;min-width:220px;}
+.width_control {position:relative;margin:0 auto;width:70%;min-width:220px;}
 section section {padding:1em;}
 #main_content .radial_stripes {position:absolute;top:-22vw;left:10%;width:40vw;height:40vw;animation:rotate 30s infinite linear;}
 .content_wrap {padding:1em;margin:0 auto;}
@@ -124,8 +124,8 @@ nav a:hover {height:2em;background:rgba(25,25,25, 0.8);padding:1em 0.5em 0.5em;}
 
   nav:hover {}
   nav ol {padding:7em 0;}
-  nav li {float:none;width:auto;text-align:center;}
-  nav li + li {position:relative;margin:2em 0 0;}
+  nav li {float:none;width:90%;text-align:center;margin:0 auto;}
+  nav li + li {position:relative;margin:1em auto 0;}
   nav li a {transition:none;border-radius:0.5em;background:rgba(255,255,255,0.4);}
   nav li a:link {color:#000;}
   nav li a:visited {color:#000;}
