@@ -4,7 +4,7 @@
 //          😎 The Main Class 😎
 // ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
 
-require_once $_SERVER["DOCUMENT_ROOT"] . 'lib/settings_class.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . 'lib/page_handler_class.php';
 
 class TheSeat {
   private $protocol; // I.e.: HTTP/1.1
@@ -12,20 +12,18 @@ class TheSeat {
   private $page_content = array();
   private $response_headers = array();
 
-  private $settings; // Settings Handler Object
+  private $page_handler; // Page Handler Object
   
   // Caching Headers
   private $last_modified;
 
   public $etag_header = false;
   
-  public $template;
-  public $requested_page;
+  public $template; // Contains the resulting "text/html" after loading the template file
+  public $requested_page; // Contains the "$_GET" value
+  public $json_dir; // Path for the json_dir containing individual pages
   
   public function __construct() {
-
-    $this->settings = new settings_handler();
-    
     // Determine the protocol used by the client  
     $this->protocol = $_SERVER["SERVER_PROTOCOL"];
     if (($this->protocol != 'HTTP/1.1') && ($this->protocol != 'HTTP/1.0')) {
@@ -36,6 +34,7 @@ class TheSeat {
     $this->response_headers['status_code']   = $this->protocol . ' 200 OK'; // Default Status Code
     $this->response_headers['X-Powered-By']  = 'The Seat';
    
+    $this->page_handler = new page_handler();
     
     $this->load_content(); // First load content
     $this->handle_caching(); // Check if content was updated since last visit. Etc.
@@ -51,10 +50,23 @@ class TheSeat {
     }
     
     // Check if 304 Not Modified
-    if (($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $last_modified_readable) && ($_SERVER['HTTP_IF_NONE_MATCH'] == $this->etag_header)) {
+  foreach (getallheaders() as $name => $value) {
+  if (strpos($name, 'If-Modified-Since') !== false) {
+    echo $name . "<br>";
+  }
+}
+    // HTTP_IF_MODIFIED_SINCE (If-Modified-Since header) is empty on first view
+    // Possibly causing a "notice" in the HTML, which is then cached by the browser.
+    // First checking if empty solves this problem
+    if(!empty($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {$IF_MODIFIED_SINCE = $_SERVER['HTTP_IF_MODIFIED_SINCE'];} else { $IF_MODIFIED_SINCE = false; }
+    if(!empty($_SERVER['HTTP_IF_NONE_MATCH'])) {$IF_NONE_MATCH = $_SERVER['HTTP_IF_NONE_MATCH'];} else { $IF_NONE_MATCH = false; }
+
+    if (($IF_MODIFIED_SINCE == $last_modified_readable) && ($IF_NONE_MATCH == $this->etag_header)) {
         $this->response_headers['status_code'] = $this->protocol. ' 304 Not Modified'; // Set status-code to "304 Not Modified"
         $this->send_headers();
         exit(); // Exit without sending response-body
+    } else {
+      echo $IF_MODIFIED_SINCE;
     }
     
   }
@@ -86,7 +98,7 @@ class TheSeat {
     }
     
     // Check if requested page exists, and load page content
-    $json_file = $this->settings->json_dir . $this->requested_page .'.json';
+    $json_file = $this->page_handler->json_dir . $this->requested_page .'.json';
     
     if ((!file_exists($json_file)) || ($frontpage_access === true)) {
       // Since "frontpage" is the default (Accessible from "/", do not allow access to this file.
@@ -99,15 +111,15 @@ class TheSeat {
     $this->last_modified            = $this->page_content['last_modified']; // Last Modified timestamp from the .json data
     $this->page_content['site_nav'] = $this->build_navigation();
   }
+
   private function build_navigation() {
-      $files = array_slice(scandir($this->settings->json_dir), 2); // Remove ".." and "." with array_slice()
-      
+      // echo $fparts[1];exit();
       if ($this->requested_page !== 'frontpage') {
-        $html_list = '<li><a href="/">Home '.$fparts[1].'</a></li>';
+        $html_list = '<li><a href="/">Home</a></li>';
       } else {
         $html_list = '';
       }
-      foreach ($files as &$file) {
+      foreach ($this->page_handler->page_list as &$file) {
         if(preg_match('/^([A-Za-z0-9_-]{1,255})\.json$/',  $file, $fparts)) {
           if(($fparts[1] !==  'frontpage') && ($fparts[1] !== $this->requested_page)) {
             $html_list .= '<li><a href="/?page='.$fparts[1].'">' . $fparts[1] . '</a></li>';
@@ -115,9 +127,6 @@ class TheSeat {
         }
       }
       return '<button id="burgerButton">☰</button><ol class="width_control">' . $html_list . '</ol>';
-  }
-  private function page_handler() {
-    $files = array_slice(scandir($this->settings->json_dir), 2); // Remove ".." and "." with array_slice()
   }
   public function load_template($template_file) {
     $page_content = $this->page_content; // $page_content used to populate $template with data
