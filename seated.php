@@ -2,11 +2,13 @@
 // ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
 //          😎 CLASSES 😎
 // ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
-
+require_once $_SERVER["DOCUMENT_ROOT"] . 'lib/settings_handler_class.php'; // 1
 require_once $_SERVER["DOCUMENT_ROOT"] . 'lib/theseat_class.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . 'lib/module_handler_class.php'; 
 
-$main = new TheSeat();
-
+$settings = new settings_handler();
+$main = new TheSeat($settings);
+$modules = new module_handler($settings);
 
 // ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
 //          😎 DISPLAY OUTPUT 😎
@@ -16,8 +18,9 @@ $main->gdpr_consent(); // Include consent dialog if user did not consent to cook
 
 $template_file = $_SERVER["DOCUMENT_ROOT"] . 'templates/default/general.php';
 $main->template = $main->load_template($template_file); // Populate the $template with the $page_content data
-$main->etag_header = md5($main->template); // Create etag based on populated template
+
+// Scan template for "[module=some_module_name]" blocks, and replace with outpus from the corresponding module
+$main->template = $modules->load($main->template);
 
 // Send output to client
-$main->send_headers(); // Send HTTP response headers before echo'ing out the response body
-echo $main->template; // Response body (typically text/html)
+$main->respond(); // Send HTTP response headers + body

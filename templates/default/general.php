@@ -16,7 +16,7 @@ $template = <<<LOADTEMPLATE
 <html lang="en">
 
 <head>
-    <title>☕ JacobSeated.com</title>
+    <title>{$page_content['title']}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="StyleSheet" href="{$general_css_file}">
     <link rel="StyleSheet" href="{$custom_css_file}">
