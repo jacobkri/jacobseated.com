@@ -1,9 +1,57 @@
 <?php
 
-   // Interface to create .json datafiles
-$json_dir  = $_SERVER["DOCUMENT_ROOT"] . 'json/';
-$json_file = '';
-$message   = '';
+// ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
+//          😎 Interface to create .json datafiles 😎
+// ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
+
+
+require $_SERVER['DOCUMENT_ROOT'] . 'lib/settings_handler_class.php';
+
+$html_options_list = ''; // When no pages are available, do not show <select> <obtion>'s
+$js_page_list = '{}'; // Empty JS object
+$message = ''; // Used for Success & Error messages later
+
+$s = new settings_handler(); // Load shared settings
+
+$lists = create_lists($s->page_list); // Create <option> list ($lists[1]) and JS object ($lists[0])
+
+if ($lists !== false) {
+  $html_options_list = 'Edit existing page: ' . $lists[1];
+  $js_page_list = $lists[0];
+}
+
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺ Functions ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+
+function create_lists($page_list) {
+  $selected = ''; // Can be used later via cookies or something
+  $lists = false;
+  $js_object = '{';$options_list = '<select id="page_selector_list">';
+  $max = count($page_list);$i = 0;
+  if ($max >= 1) {
+    while($i < $max) {
+      if (preg_match('/^([^\.]{1,250})\.json$/', $page_list["$i"], $matches, PREG_OFFSET_CAPTURE)) {
+        $page_name = $matches[1][0]; // Grab Page name from the file name (We could also load the .json, but meh...)
+        $js_object .= '"'.$page_name . '":"' . $page_list["$i"].'"'; // Build js object
+        $options_list .= '<option value="'.$page_list["$i"].'"'.$selected.'>' . $page_name . '</option>';
+      }
+      ++$i;
+      if ($i !== $max) { // Only add "," to js object if not the last item in the list
+        $js_object .= ',';
+      }
+    }
+    $js_object .= '}';$options_list .= '</select><button id="new_page" class="button">New Page</button>';
+    $lists = array($js_object, $options_list);
+  }
+  return $lists;
+}
+
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺ Blah blah blah ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $page_content = array();
@@ -52,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $page_content['last_modified'] = time(); // May be used for caching in the Last-Modified header
       
       $json_data = json_encode($page_content);
-      $json_file = $json_dir . $file_name . '.json';
+      $json_file = $s->json_dir . $file_name . '.json';
       
       if (!file_exists($json_file)) { // If the page already exists
         $message = '<p>Page successfully created!</p><p>Want to create another one?</p>';
@@ -63,13 +111,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if(file_put_contents($json_file, $json_data) === false) {
         $message = '<p><b>Error:</b> Failed to create page. Check that your server has write permission to the <b>json/</b> directory.</p><p><b>File:</b> <i>'.$json_file.'</i></p>';
       } else {
-        file_put_contents($json_dir . $file_name . '_html.html', $page_content['text_html']); // Save copy of HTML for easy editing
+        file_put_contents($s->json_html . $file_name . '_html.html', $page_content['text_html']); // Save copy of HTML for editing and future caching
       }
     $message = '<div id="message">' . $message . '</div>';
   } else { // If the REQUIRED FIELDS are empty 
     echo 'What are you trying to accomplish? (Rhetorical question)';exit();
   }
+} else {
+
+
+
 }
+
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺ HTML+PHP Spageti ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
+// ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 
 ?><!doctype html>
 <html lang="en">
@@ -88,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     label {font-family:"Roboto";}
     #message {background:rgb(240,240,240);border-radius:1em;padding:0.5em;width:100%;}
     article {width:50%;min-width:300px;max-width:1600px;margin:0 auto 200px;}
+    select {margin:0 1em;}
    </style>
   </head>
 
@@ -95,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    <article>
     <h1>Page Maker</h1>
     <p>Saves data to <i>.json</i> files for use with site templates.</p>
+    <div id="page_selector"><?php echo $html_options_list; ?></div>
     <?php echo $message; ?>
     <form action="page_maker.php" method="post">
       <label for="title">Title:</label>
@@ -105,14 +164,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
       <label for="template">Template css file <b>I.e:</b> <i>yourpage.css</i> <b>||</b> <i>general.css</i> (Optional):</label>
       <input type="text" name="custom_css" id="custom_css" placeholder="frontpage.css">
-      <textarea name="text_html" rows="4" cols="30" class="inputs" placeholder="text/html"></textarea>
-      <input type="submit" class="button" value="Create">
+      <textarea name="text_html" id="text_html" rows="4" cols="30" class="inputs" placeholder="text/html"></textarea>
+      <input type="submit" class="button" value="Create" id="edit_button">
     </form>
     <h2>Readme</h2>
     <p>Individual pages can be coded in your favorite HTML editor. When done, copy the source (from within the <i>&lt;article&gt;</i> part of the HTML) and paste it here to generate the <b>.json</b>.
     A copy of the HTML source is saved along with the json file, in case you should later need it.</p>
     <p>If you have any custom CSS for the page, remember to manually save a css file in <b>templates/[template_name]/css</b> and enter the name of the file in the template field.</p>
    </article>
+
+   <script>
+   let jsonDir = "/json/"; // Root-relative path to json directory
+   let pages_array = <?php echo $js_page_list. ';'; ?>
+   
+   // Form Fields
+   titleField       = document.querySelector("#title");
+   cssFilePathField = document.querySelector("#custom_css");
+   descriptionField = document.querySelector("#description");
+   textHtmlField    = document.querySelector("#text_html");
+   editButton       = document.querySelector("#edit_button");
+
+   optionsListHTML = '';
+
+   document.addEventListener("DOMContentLoaded", main);
+   
+   function main() {
+    optionsList = document.querySelector("#page_selector_list");
+
+    optionsListHTML = optionsList.innerHTML; // Remember initial HTML content
+
+    if (optionsList !== null) {
+      jsonURL = jsonDir + optionsList.value;
+      
+      updateForm(); // Initial view
+
+      optionsList.addEventListener("change", function(){
+        jsonURL = jsonDir + optionsList.value;
+        updateForm();
+      });
+      newPageButton = document.querySelector("#new_page");
+      newPageButton.addEventListener("click", clearForm);
+    }
+   }
+
+   async function loadJson(JSON_URL) {
+    // Load json into jsonObject, then save it in wp_data for later use
+    let jsonObject = await fetch(JSON_URL);
+    jsonData = await jsonObject.json();
+  
+    if (jsonData.length < 1) {
+      return false;
+    } else {
+	  return jsonData;
+    }
+  }
+  async function updateForm() {
+    jsonData = await loadJson(jsonURL);
+
+    titleField.value       = jsonData['title'];
+    descriptionField.value = jsonData['description'];
+    textHtmlField.value    = jsonData['text_html'];
+    cssFilePathField.value = jsonData['custom_css'];
+    editButton.value       = 'Update';
+  }
+  function clearForm() {
+    optionsList.innerHTML  = optionsListHTML + '<option selected>N/A</option>';
+    titleField.value       = '';
+    descriptionField.value = '';
+    textHtmlField.value    = '';
+    cssFilePathField.value = '';
+    editButton.value       = 'Create';
+  }
+
+   </script>
   </body>
 
 </html>

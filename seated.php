@@ -19,7 +19,7 @@ $main->gdpr_consent(); // Include consent dialog if user did not consent to cook
 $template_file = $_SERVER["DOCUMENT_ROOT"] . 'templates/default/general.php';
 $main->template = $main->load_template($template_file); // Populate the $template with the $page_content data
 
-// Scan template for "[module=some_module_name]" blocks, and replace with outpus from the corresponding module
+// Scan template for "[module=some_module_name]" blocks, and replace with output from the corresponding module
 $main->template = $modules->load($main->template);
 
 // Send output to client
