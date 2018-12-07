@@ -4,7 +4,6 @@
 //          😎 Interface to create .json datafiles 😎
 // ✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
 
-
 require $_SERVER['DOCUMENT_ROOT'] . 'lib/settings_handler_class.php';
 
 $html_options_list = ''; // When no pages are available, do not show <select> <obtion>'s
@@ -13,25 +12,21 @@ $message = ''; // Used for Success & Error messages later
 
 $s = new settings_handler(); // Load shared settings
 
-$lists = create_lists($s->page_list); // Create <option> list ($lists[1]) and JS object ($lists[0])
-
-if ($lists !== false) {
-  $html_options_list = 'Edit existing page: ' . $lists[1];
-  $js_page_list = $lists[0];
-}
-
 // ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 // ☺☺☺☺☺☺ Functions ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 // ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 // ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 
-function create_lists($page_list) {
-  $selected = ''; // Can be used later via cookies or something
+function create_lists($page_list,  $selected_file=false) {
   $lists = false;
   $js_object = '{';$options_list = '<select id="page_selector_list">';
   $max = count($page_list);$i = 0;
   if ($max >= 1) {
     while($i < $max) {
+      if ($selected_file == $page_list["$i"]) {
+        $selected = ' selected';
+      } else {$selected = '';}
+
       if (preg_match('/^([^\.]{1,250})\.json$/', $page_list["$i"], $matches, PREG_OFFSET_CAPTURE)) {
         $page_name = $matches[1][0]; // Grab Page name from the file name (We could also load the .json, but meh...)
         $js_object .= '"'.$page_name . '":"' . $page_list["$i"].'"'; // Build js object
@@ -66,6 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } else {
           $post_title = preg_replace('!\s+!', ' ', $_POST['title']);
           $file_name = preg_replace('! !', '-', $post_title); // Without (.ext) extension at this point
+          $json_file_name = $file_name . '.json';
+          $html_file_name = $file_name . '.html';
       }
       
       if($text_html_size > 63000) {
@@ -100,27 +97,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $page_content['last_modified'] = time(); // May be used for caching in the Last-Modified header
       
       $json_data = json_encode($page_content);
-      $json_file = $s->json_dir . $file_name . '.json';
+      $json_file = $s->json_dir . $json_file_name;
       
-      if (!file_exists($json_file)) { // If the page already exists
+      if (!file_exists($json_file)) { // If the page does not exists
         $message = '<p>Page successfully created!</p><p>Want to create another one?</p>';
-      } else {
+      } else { // If the page already exists
         $message = '<p>Page successfully updated!</p>';
       }
       
       if(file_put_contents($json_file, $json_data) === false) {
         $message = '<p><b>Error:</b> Failed to create page. Check that your server has write permission to the <b>json/</b> directory.</p><p><b>File:</b> <i>'.$json_file.'</i></p>';
       } else {
-        file_put_contents($s->json_html . $file_name . '_html.html', $page_content['text_html']); // Save copy of HTML for editing and future caching
+        // The file was successfully created/updated
+        file_put_contents($s->html_dir . $html_file_name, $page_content['text_html']); // Save copy of HTML for editing and future caching
+
+        $lists = create_lists($s->page_list, $json_file_name); // Create <option> list ($lists[1]) and JS object ($lists[0])
       }
     $message = '<div id="message">' . $message . '</div>';
   } else { // If the REQUIRED FIELDS are empty 
     echo 'What are you trying to accomplish? (Rhetorical question)';exit();
   }
 } else {
+  $lists = create_lists($s->page_list); // Create <option> list ($lists[1]) and JS object ($lists[0])
+}
 
-
-
+if ($lists !== false) {
+  $html_options_list = 'Edit existing page: ' . $lists[1];
+  $js_page_list = $lists[0];
 }
 
 // ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
@@ -228,7 +231,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     editButton.value       = 'Update';
   }
   function clearForm() {
-    optionsList.innerHTML  = optionsListHTML + '<option selected>N/A</option>';
+
+    options = document.querySelectorAll("option");
+    //console.table(options);
+
+    options.forEach(function(element) {
+      // Technically, it is probably best to remove selected attribute before we add the "New" <option selected>
+      // Note. The <option> list is not used for anything when creating a new page
+      if (element.hasAttribute("selected")) {
+        element.removeAttribute("selected");
+      }
+    });
+
+    optionsList.innerHTML  = optionsListHTML + '<option selected>New</option>';
     titleField.value       = '';
     descriptionField.value = '';
     textHtmlField.value    = '';

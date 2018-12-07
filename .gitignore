@@ -1,6 +1,6 @@
 kea/
 static/
-json/*.html
+html/
 i/profile1.jpg
 .project
 .settings
