@@ -1,0 +1,7 @@
+#main_content header {padding:5em 0;}
+
+#main_content header img {filter:grayscale(100%);padding:1em;max-width:95%;}
+
+@media screen and (max-width: 550px) {
+    #main_content header img {padding:0;max-width:95%;}
+  }

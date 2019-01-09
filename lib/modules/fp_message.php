@@ -26,8 +26,12 @@ class fp_message {
  
    if ($month == 12) {
      if($day != 24) {
-       $max = count($waiting_for_christmas)-1;$random = rand(0, $max);
-       $message = $waiting_for_christmas["$random"];
+       if ($day < 24) {
+        $max = count($waiting_for_christmas)-1;$random = rand(0, $max);
+        $message = $waiting_for_christmas["$random"];
+       } else {
+        $message = 'A NEW YEAR IS APPROACHING!';
+       }
      } else {
        $max = count($christmas_has_arrived)-1;$random = rand(0, $max);
        $message = $christmas_has_arrived["$random"];

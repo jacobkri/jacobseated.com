@@ -1,0 +1,14 @@
+#main_content header {text-align:right;margin-top:-1em;}
+#main_content header {background:rgb(235, 235, 235);padding:5em 2em 1em;border-bottom-left-radius:2em;border-bottom-right-radius:2em;}
+// rgba(217, 255, 0, 0.4) || rgb(217, 255, 0)
+.example_img_floated {margin:1em 1em 2em;float:left;width:500px;background:rgb(235, 235, 235);border-radius:1em;}
+.example_img_floated:after {display:table;content:" ";clear:both;}
+.example_img_floated + p {clear:both;}
+
+#main_content section {clear:both;padding:2em 0;}
+iframe {margin:1em auto;width:50%;max-width:550px;display:block;}
+
+
+@media screen and (max-width: 550px) {
+    .example_img_floated {float:none;width:95%;margin:1em 0 2em;}
+}

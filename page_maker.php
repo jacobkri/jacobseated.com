@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       // OPTIONAL FIELDS
       if(!empty($_POST['description'])) {
-        if (!preg_match('/^[A-Za-z0-9_\., -!]{1,255}$/', $_POST['description'])) {
+        if (!preg_match('/^[A-Za-z0-9_\., \-!]{1,255}$/', $_POST['description'])) {
           echo '<h1>Invalid description</h1><p>The field can contain a maximum of <b>255</b> characters.</p>';
           exit();
         }
@@ -87,14 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } else {
         $post_custom_css = '';
       }
+      if(isset($_POST['nav_include'])) {$include_in_navigation = 1;} else {$include_in_navigation = 0;}
       
       
       // If the POST passed validation, create the .json file
-      $page_content['title']         = $_POST['title'];
-      $page_content['description']   = $post_description;
-      $page_content['custom_css']    = $post_custom_css;
-      $page_content['text_html']     = $_POST['text_html'];
-      $page_content['last_modified'] = time(); // May be used for caching in the Last-Modified header
+      $page_content['title']                    = $_POST['title'];
+      $page_content['description']              = $post_description;
+      $page_content['custom_css']               = $post_custom_css;
+      $page_content['text_html']                = $_POST['text_html'];
+      $page_content['last_modified']            = time(); // May be used for caching in the Last-Modified header
+      $page_content['include_in_navigation']    = $include_in_navigation;
       
       $json_data = json_encode($page_content);
       $json_file = $s->json_dir . $json_file_name;
@@ -139,16 +141,28 @@ if ($lists !== false) {
    <link rel="StyleSheet" href="/templates/default/css/roboto.css">
    <link rel="StyleSheet" href="/templates/default/css/open-sans.css">
    <style type="text/css">
+     body {background:rgb(240,240,240);color:rgb(60,60,60);font-family:"Open Sans", Georgia, serif;}
      form {margin:1em 0;width:100%;}
      form input {display:block;margin:0 0 1em;height:1.2em;padding:0.5em;width:100%;}
      form textarea {margin:0 0 1em;padding:0.5em;width:100%;min-height:300px;max-width:100%;}
+     .ui_style {background:rgb(250,250,250);color:rgb(50,50,50);border:1px solid rgb(200,200,200);font-family:"Roboto", serif;}
 
-    .button {width:8em;height:2em;background:rgb(210,210,210);border:none;cursor:pointer;}
-    .button:hover {background:rgb(230,230,230);}
+    .button {width:8em;height:2.5em;background:rgb(135,145,235);border:none;cursor:pointer;color:rgb(245,245,245);}
+    .button:hover {background:rgb(155,165,255);color:rgb(245,245,245);}
     label {font-family:"Roboto";}
     #message {background:rgb(240,240,240);border-radius:1em;padding:0.5em;width:100%;}
     article {width:50%;min-width:300px;max-width:1600px;margin:0 auto 200px;}
     select {margin:0 1em;}
+
+    @font-face {
+      font-family: "Open Sans";
+      src: url("/fonts/OpenSans-Regular.woff2") format("woff2"),
+      url("/fonts/OpenSans-Regular.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("/fonts/Roboto-Regular.woff2") format("woff2");
+    }
    </style>
   </head>
 
@@ -160,14 +174,16 @@ if ($lists !== false) {
     <?php echo $message; ?>
     <form action="page_maker.php" method="post">
       <label for="title">Title:</label>
-      <input type="text" name="title" id="title" placeholder="Title">
+      <input type="text" name="title" id="title" placeholder="Title" class="ui_style">
       
       <label for="description">Description (Optional):</label>
-      <input type="text" name="description" id="description" placeholder="Description">
+      <input type="text" name="description" id="description" placeholder="Description" class="ui_style">
       
       <label for="template">Template css file <b>I.e:</b> <i>yourpage.css</i> <b>||</b> <i>general.css</i> (Optional):</label>
-      <input type="text" name="custom_css" id="custom_css" placeholder="frontpage.css">
-      <textarea name="text_html" id="text_html" rows="4" cols="30" class="inputs" placeholder="text/html"></textarea>
+      <input type="text" name="custom_css" id="custom_css" placeholder="frontpage.css" class="ui_style">
+      <label for="nav_include">Include in Navigation:</label>
+      <input style="width:auto;display:inline;" type="checkbox" name="nav_include" id="nav_include" checked>
+      <textarea name="text_html" id="text_html" rows="4" cols="30" class="ui_style" placeholder="text/html"></textarea>
       <input type="submit" class="button" value="Create" id="edit_button">
     </form>
     <h2>Readme</h2>
@@ -229,6 +245,11 @@ if ($lists !== false) {
     textHtmlField.value    = jsonData['text_html'];
     cssFilePathField.value = jsonData['custom_css'];
     editButton.value       = 'Update';
+    console.log(jsonData['include_in_navigation']);
+    if(jsonData['include_in_navigation'] !== 1) {
+      
+      document.querySelector("#nav_include").checked = false;
+    }
   }
   function clearForm() {
 

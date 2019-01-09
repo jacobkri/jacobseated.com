@@ -122,8 +122,11 @@ class TheSeat {
       }
       foreach ($this->s->page_list as &$file) {
         if(preg_match('/^([A-Za-z0-9_-]{1,255})\.json$/',  $file, $fparts)) {
-          if(($fparts[1] !==  'frontpage') && ($fparts[1] !== $this->requested_page)) {
-            $html_list .= '<li><a href="/?page='.$fparts[1].'">' . $fparts[1] . '</a></li>';
+          $pageArr = json_decode(file_get_contents($this->s->json_dir . $file), true);
+          if ((isset($pageArr['include_in_navigation'])) && ($pageArr['include_in_navigation'] === 1)) {
+            if(($fparts[1] !==  'frontpage') && ($fparts[1] !== $this->requested_page)) {
+              $html_list .= '<li><a href="/?page='.$fparts[1].'">' . str_replace("-", " ", $fparts[1]) . '</a></li>';
+            }
           }
         }
       }

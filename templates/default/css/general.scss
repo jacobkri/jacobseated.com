@@ -19,6 +19,7 @@ body {max-width:1920px;margin:0 auto;letter-spacing: 0.05em;background:rgb(245, 
 article p {font-size: 1.4em;margin: 0 0 1em;font-family: "Open Sans", sans-serif;}
 #main_content h1 {font-size: 2.9em;font-family: $heading-font;}
 h2,h3 {font-size: 1.9em;font-family: $heading-font;}
+.indent {text-indent:1em;font-style:italic;}
 
 /* General->Layout */
 .width_control {position:relative;margin:0 auto;width:70%;min-width:220px;}
@@ -109,7 +110,7 @@ nav a:hover {height:2em;background:rgba(25,25,25, 0.8);padding:1em 0.5em 0.5em;}
   to {height:2.7em;}
 }
 /* For devices with tiny screen sizes */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1080px) {
   .width_control {width:auto;}
   #main_content .radial_stripes {width:100vw;height:100vw;top:-50vw;}
   #site_header {height:auto;}
