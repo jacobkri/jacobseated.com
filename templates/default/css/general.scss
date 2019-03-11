@@ -77,9 +77,11 @@ nav a:hover {height:2em;background:rgba(25,25,25, 0.8);padding:1em 0.5em 0.5em;}
 /* Ads and Widgets */
 #twitter_feed {margin:0 auto;}
 
-
-
+#illuminator {width:3em;height:3em;position: absolute;top:0;left:0;background:rgba(255, 255, 255, 1);filter:blur(2em);pointer-events:none;}
+.itemIllum {position:relative;overflow:hidden;}
 /* Animations */
+.visible {opacity:1;transition:opacity 0.2s linear;}
+.hidden {opacity:0;transition:opacity 0.2s linear;}
 .fade_in_delayed {opacity:0;animation:fade_in_delayed 2s forwards;animation-delay:2s;-webkit-animation-delay:2s;}
 @keyframes slide_up {
   from {margin-top:100vw;opacity:0;}

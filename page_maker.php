@@ -37,7 +37,7 @@ function create_lists($page_list,  $selected_file=false) {
         $js_object .= ',';
       }
     }
-    $js_object .= '}';$options_list .= '</select><button id="new_page" class="button">New Page</button>';
+    $js_object .= '}';$options_list .= '</select><button id="new_page" class="button itemIllum">New Page</button>';
     $lists = array($js_object, $options_list);
   }
   return $lists;
@@ -133,146 +133,269 @@ if ($lists !== false) {
 // ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 // ☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺☺
 
-?><!doctype html>
+?>
+<!doctype html>
 <html lang="en">
 
-  <head>
-   <title>Page Maker</title>
-   <link rel="StyleSheet" href="/templates/default/css/roboto.css">
-   <link rel="StyleSheet" href="/templates/default/css/open-sans.css">
-   <style type="text/css">
-     body {background:rgb(240,240,240);color:rgb(60,60,60);font-family:"Open Sans", Georgia, serif;}
-     form {margin:1em 0;width:100%;}
-     form input {display:block;margin:0 0 1em;height:1.2em;padding:0.5em;width:100%;}
-     form textarea {margin:0 0 1em;padding:0.5em;width:100%;min-height:300px;max-width:100%;}
-     .ui_style {background:rgb(250,250,250);color:rgb(50,50,50);border:1px solid rgb(200,200,200);font-family:"Roboto", serif;}
+<head>
+    <title>Page Maker</title>
+    <link rel="StyleSheet" href="/templates/default/css/roboto.css">
+    <link rel="StyleSheet" href="/templates/default/css/open-sans.css">
+    <style type="text/css">
+    body {
+        background: rgb(240, 240, 240);
+        color: rgb(60, 60, 60);
+        font-family: "Open Sans", Georgia, serif;
+    }
 
-    .button {width:8em;height:2.5em;background:rgb(135,145,235);border:none;cursor:pointer;color:rgb(245,245,245);}
-    .button:hover {background:rgb(155,165,255);color:rgb(245,245,245);}
-    label {font-family:"Roboto";}
-    #message {background:rgb(240,240,240);border-radius:1em;padding:0.5em;width:100%;}
-    article {width:50%;min-width:300px;max-width:1600px;margin:0 auto 200px;}
-    select {margin:0 1em;}
+    form {
+        margin: 1em 0;
+        width: 100%;
+    }
+
+    form input {
+        display: block;
+        margin: 0 0 1em;
+        height: 1.2em;
+        padding: 0.5em;
+        width: 100%;
+    }
+
+    form textarea {
+        margin: 0 0 1em;
+        padding: 0.5em;
+        width: 100%;
+        min-height: 300px;
+        max-width: 100%;
+    }
+
+    .ui_style {
+        background: rgb(250, 250, 250);
+        color: rgb(50, 50, 50);
+        border: 1px solid rgb(200, 200, 200);
+        font-family: "Roboto", serif;
+    }
+
+    .button {
+        width: 8em;
+        height: 2.5em;
+        background: rgb(135, 145, 235);
+        border: none;
+        cursor: pointer;
+        color: rgb(245, 245, 245);
+    }
+
+    .button:hover {
+        background: rgb(155, 165, 255);
+        color: rgb(245, 245, 245);
+    }
+
+    label {
+        font-family: "Roboto";
+    }
+
+    #message {
+        background: rgb(240, 240, 240);
+        border-radius: 1em;
+        padding: 0.5em;
+        width: 100%;
+    }
+
+    article {
+        width: 50%;
+        min-width: 300px;
+        max-width: 1600px;
+        margin: 0 auto 200px;
+    }
+
+    select {
+        margin: 0 1em;
+    }
 
     @font-face {
-      font-family: "Open Sans";
-      src: url("/fonts/OpenSans-Regular.woff2") format("woff2"),
-      url("/fonts/OpenSans-Regular.ttf") format("truetype");
+        font-family: "Open Sans";
+        src: url("/fonts/OpenSans-Regular.woff2") format("woff2"),
+            url("/fonts/OpenSans-Regular.ttf") format("truetype");
     }
+
     @font-face {
-      font-family: "Roboto";
-      src: url("/fonts/Roboto-Regular.woff2") format("woff2");
+        font-family: "Roboto";
+        src: url("/fonts/Roboto-Regular.woff2") format("woff2");
     }
-   </style>
-  </head>
 
-  <body>
-   <article>
-    <h1>Page Maker</h1>
-    <p>Saves data to <i>.json</i> files for use with site templates.</p>
-    <div id="page_selector"><?php echo $html_options_list; ?></div>
-    <?php echo $message; ?>
-    <form action="page_maker.php" method="post">
-      <label for="title">Title:</label>
-      <input type="text" name="title" id="title" placeholder="Title" class="ui_style">
-      
-      <label for="description">Description (Optional):</label>
-      <input type="text" name="description" id="description" placeholder="Description" class="ui_style">
-      
-      <label for="template">Template css file <b>I.e:</b> <i>yourpage.css</i> <b>||</b> <i>general.css</i> (Optional):</label>
-      <input type="text" name="custom_css" id="custom_css" placeholder="frontpage.css" class="ui_style">
-      <label for="nav_include">Include in Navigation:</label>
-      <input style="width:auto;display:inline;" type="checkbox" name="nav_include" id="nav_include" checked>
-      <textarea name="text_html" id="text_html" rows="4" cols="30" class="ui_style" placeholder="text/html"></textarea>
-      <input type="submit" class="button" value="Create" id="edit_button">
-    </form>
-    <h2>Readme</h2>
-    <p>Individual pages can be coded in your favorite HTML editor. When done, copy the source (from within the <i>&lt;article&gt;</i> part of the HTML) and paste it here to generate the <b>.json</b>.
-    A copy of the HTML source is saved along with the json file, in case you should later need it.</p>
-    <p>If you have any custom CSS for the page, remember to manually save a css file in <b>templates/[template_name]/css</b> and enter the name of the file in the template field.</p>
-   </article>
-
-   <script>
-   let jsonDir = "/json/"; // Root-relative path to json directory
-   let pages_array = <?php echo $js_page_list. ';'; ?>
-   
-   // Form Fields
-   titleField       = document.querySelector("#title");
-   cssFilePathField = document.querySelector("#custom_css");
-   descriptionField = document.querySelector("#description");
-   textHtmlField    = document.querySelector("#text_html");
-   editButton       = document.querySelector("#edit_button");
-
-   optionsListHTML = '';
-
-   document.addEventListener("DOMContentLoaded", main);
-   
-   function main() {
-    optionsList = document.querySelector("#page_selector_list");
-
-    optionsListHTML = optionsList.innerHTML; // Remember initial HTML content
-
-    if (optionsList !== null) {
-      jsonURL = jsonDir + optionsList.value;
-      
-      updateForm(); // Initial view
-
-      optionsList.addEventListener("change", function(){
-        jsonURL = jsonDir + optionsList.value;
-        updateForm();
-      });
-      newPageButton = document.querySelector("#new_page");
-      newPageButton.addEventListener("click", clearForm);
+    #illuminator {
+        width: 3em;
+        height: 3em;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 1);
+        filter: blur(2em);
+        pointer-events: none;
     }
-   }
 
-   async function loadJson(JSON_URL) {
-    // Load json into jsonObject, then save it in wp_data for later use
-    let jsonObject = await fetch(JSON_URL);
-    jsonData = await jsonObject.json();
-  
-    if (jsonData.length < 1) {
-      return false;
-    } else {
-	  return jsonData;
+    .itemIllum {
+        position: relative;
+        overflow: hidden;
     }
-  }
-  async function updateForm() {
-    jsonData = await loadJson(jsonURL);
+    </style>
+</head>
 
-    titleField.value       = jsonData['title'];
-    descriptionField.value = jsonData['description'];
-    textHtmlField.value    = jsonData['text_html'];
-    cssFilePathField.value = jsonData['custom_css'];
-    editButton.value       = 'Update';
-    console.log(jsonData['include_in_navigation']);
-    if(jsonData['include_in_navigation'] !== 1) {
-      
-      document.querySelector("#nav_include").checked = false;
+<body>
+    <article id="main_content">
+        <h1>Page Maker</h1>
+        <p>Saves data to <i>.json</i> files for use with site templates.</p>
+        <div id="page_selector"><?php echo $html_options_list; ?></div>
+        <?php echo $message; ?>
+        <form action="page_maker.php" method="post">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" placeholder="Title" class="ui_style">
+
+            <label for="description">Description (Optional):</label>
+            <input type="text" name="description" id="description" placeholder="Description" class="ui_style">
+
+            <label for="template">Template css file <b>I.e:</b> <i>yourpage.css</i> <b>||</b> <i>general.css</i>
+                (Optional):</label>
+            <input type="text" name="custom_css" id="custom_css" placeholder="frontpage.css" class="ui_style">
+            <label for="nav_include">Include in Navigation:</label>
+            <input style="width:auto;display:inline;" type="checkbox" name="nav_include" id="nav_include" checked>
+            <textarea name="text_html" id="text_html" rows="4" cols="30" class="ui_style"
+                placeholder="text/html"></textarea>
+            <button type="submit" class="button itemIllum" id="edit_button">Save</button>
+        </form>
+        <h2>Readme</h2>
+        <p>Individual pages can be coded in your favorite HTML editor. When done, copy the source (from within the
+            <i>&lt;article&gt;</i> part of the HTML) and paste it here to generate the <b>.json</b>.
+            A copy of the HTML source is saved along with the json file, in case you should later need it.</p>
+        <p>If you have any custom CSS for the page, remember to manually save a css file in
+            <b>templates/[template_name]/css</b> and enter the name of the file in the template field.</p>
+    </article>
+
+    <script>
+    let jsonDir = "/json/"; // Root-relative path to json directory
+    let pages_array = <?php echo $js_page_list. ';'; ?>
+
+    // Form Fields
+    titleField = document.querySelector("#title");
+    cssFilePathField = document.querySelector("#custom_css");
+    descriptionField = document.querySelector("#description");
+    textHtmlField = document.querySelector("#text_html");
+    editButton = document.querySelector("#edit_button");
+
+    optionsListHTML = '';
+
+    document.addEventListener("DOMContentLoaded", main);
+
+    function main() {
+        optionsList = document.querySelector("#page_selector_list");
+
+        optionsListHTML = optionsList.innerHTML; // Remember initial HTML content
+
+        if (optionsList !== null) {
+            jsonURL = jsonDir + optionsList.value;
+
+            updateForm(); // Initial view
+
+            optionsList.addEventListener("change", function() {
+                jsonURL = jsonDir + optionsList.value;
+                updateForm();
+            });
+            newPageButton = document.querySelector("#new_page");
+            newPageButton.addEventListener("click", clearForm);
+        }
     }
-  }
-  function clearForm() {
 
-    options = document.querySelectorAll("option");
-    //console.table(options);
+    async function loadJson(JSON_URL) {
+        // Load json into jsonObject, then save it in wp_data for later use
+        let jsonObject = await fetch(JSON_URL);
+        jsonData = await jsonObject.json();
 
-    options.forEach(function(element) {
-      // Technically, it is probably best to remove selected attribute before we add the "New" <option selected>
-      // Note. The <option> list is not used for anything when creating a new page
-      if (element.hasAttribute("selected")) {
-        element.removeAttribute("selected");
-      }
-    });
+        if (jsonData.length < 1) {
+            return false;
+        } else {
+            return jsonData;
+        }
+    }
+    async function updateForm() {
+        jsonData = await loadJson(jsonURL);
 
-    optionsList.innerHTML  = optionsListHTML + '<option selected>New</option>';
-    titleField.value       = '';
-    descriptionField.value = '';
-    textHtmlField.value    = '';
-    cssFilePathField.value = '';
-    editButton.value       = 'Create';
-  }
+        titleField.value = jsonData['title'];
+        descriptionField.value = jsonData['description'];
+        textHtmlField.value = jsonData['text_html'];
+        cssFilePathField.value = jsonData['custom_css'];
+        editButton.value = 'Update';
+        console.log(jsonData['include_in_navigation']);
+        if (jsonData['include_in_navigation'] !== 1) {
 
-   </script>
-  </body>
+            document.querySelector("#nav_include").checked = false;
+        }
+    }
+
+    function clearForm() {
+
+        options = document.querySelectorAll("option");
+        //console.table(options);
+
+        options.forEach(function(element) {
+            // Technically, it is probably best to remove selected attribute before we add the "New" <option selected>
+            // Note. The <option> list is not used for anything when creating a new page
+            if (element.hasAttribute("selected")) {
+                element.removeAttribute("selected");
+            }
+        });
+
+        optionsList.innerHTML = optionsListHTML + '<option selected>New</option>';
+        titleField.value = '';
+        descriptionField.value = '';
+        textHtmlField.value = '';
+        cssFilePathField.value = '';
+        editButton.value = 'Create';
+    }
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", runHighlighter);
+
+    function runHighlighter() {
+        let produktinformation = document.querySelector("#main_content");
+
+        let itemsToIlluminate = document.querySelectorAll(".itemIllum");
+
+        itemsToIlluminate.forEach(function(item) {
+            item.addEventListener("mouseenter", showHighlight);
+            item.addEventListener("mouseleave", hideHighlight);
+            item.addEventListener("mousemove", highlight);
+        });
+
+        function highlight(event) {
+            let highlighter = document.querySelector("#illuminator");
+
+            var canvas = document.querySelector("#main_content");
+            var rect = this.getBoundingClientRect();
+            var x = event.clientX - rect.left;
+            var y = event.clientY - rect.top;
+
+            highlighter.style.top = y + "px";
+            highlighter.style.left = x - 30 + "px";
+        }
+
+        function hideHighlight() {
+            let highlighter = document.querySelector("#illuminator");
+            highlighter.remove();
+            highlighter.className = "hidden";
+        }
+
+        function showHighlight() {
+            let illuminator = document.createElement("div");
+            illuminator.id = "illuminator";
+            this.appendChild(illuminator);
+
+            let highlighter = document.querySelector("#illuminator");
+
+            highlighter.style.display = "block";
+            highlighter.className = "visible";
+        }
+    }
+    </script>
+</body>
 
 </html>

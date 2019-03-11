@@ -116,7 +116,7 @@ class TheSeat {
   private function build_navigation() {
       // echo $fparts[1];exit();
       if ($this->requested_page !== 'frontpage') {
-        $html_list = '<li><a href="/">Home</a></li>';
+        $html_list = '<li><a href="/" class="itemIllum">Home</a></li>';
       } else {
         $html_list = '';
       }
@@ -125,12 +125,12 @@ class TheSeat {
           $pageArr = json_decode(file_get_contents($this->s->json_dir . $file), true);
           if ((isset($pageArr['include_in_navigation'])) && ($pageArr['include_in_navigation'] === 1)) {
             if(($fparts[1] !==  'frontpage') && ($fparts[1] !== $this->requested_page)) {
-              $html_list .= '<li><a href="/?page='.$fparts[1].'">' . str_replace("-", " ", $fparts[1]) . '</a></li>';
+              $html_list .= '<li><a href="/?page='.$fparts[1].'" class="itemIllum">' . str_replace("-", " ", $fparts[1]) . '</a></li>';
             }
           }
         }
       }
-      return '<button id="burgerButton">☰</button><ol class="width_control">' . $html_list . '</ol>';
+      return '<button id="burgerButton" class="itemIllum">☰</button><ol class="width_control">' . $html_list . '</ol>';
   }
   public function load_template($template_file) {
     $page_content = $this->page_content; // $page_content used to populate $template with data
@@ -139,7 +139,7 @@ class TheSeat {
   }
 
   public function gdpr_consent() { // This method is not yet in use
-    $consent_cookie = 'granted'; // Not in use yet.
+    $consent_cookie = 'granted'; // Not in use yet. 
     
     // GDPR Consent Message
     if (!empty($_SERVER['CONTINENT_CODE'])) {
@@ -164,5 +164,3 @@ class TheSeat {
   }
 
 }
-
-

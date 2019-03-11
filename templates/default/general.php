@@ -68,7 +68,51 @@ $template = <<<LOADTEMPLATE
         }
     });
     </script>
+    <script>
+  document.addEventListener("DOMContentLoaded", runHighlighter);
+
+  function runHighlighter() {
+    let produktinformation = document.querySelector("#main_content");
+
+    let itemsToIlluminate = document.querySelectorAll(".itemIllum");
+
+    itemsToIlluminate.forEach(function(item) {
+      item.addEventListener("mouseenter", showHighlight);
+      item.addEventListener("mouseleave", hideHighlight);
+      item.addEventListener("mousemove", highlight);
+    });
+
+    function highlight(event) {
+      let highlighter = document.querySelector("#illuminator");
+
+      var canvas = document.querySelector("#main_content");
+      var rect = this.getBoundingClientRect();
+      var x = event.clientX - rect.left;
+      var y = event.clientY - rect.top;
+
+      highlighter.style.top = y + "px";
+      highlighter.style.left = x - 30 + "px";
+    }
+    function hideHighlight() {
+      let highlighter = document.querySelector("#illuminator");
+      highlighter.remove();
+      highlighter.className = "hidden";
+    }
+    function showHighlight() {
+      let illuminator = document.createElement("div");
+      illuminator.id = "illuminator";
+      this.appendChild(illuminator);
+
+      let highlighter = document.querySelector("#illuminator");
+
+      highlighter.style.display = "block";
+      highlighter.className = "visible";
+    }
+  }
+</script>
 </body>
 
 </html>
 LOADTEMPLATE;
+
+?>
